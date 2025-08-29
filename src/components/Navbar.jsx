@@ -4,13 +4,12 @@ import { assets } from "../assets/assets";
 import { MenuIcon, SearchIcon, TicketPlus, XIcon } from "lucide-react";
 import { useClerk, UserButton, useUser } from "@clerk/clerk-react";
 
-
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user } = useUser();
   const { openSignIn } = useClerk();
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   return (
     <div className="fixed top-0 left-0 z-50 w-full flex items-center justify-between px-6 md:px-16 md:px-36 py-5">
@@ -30,7 +29,8 @@ const Navbar = () => {
 
         <Link
           onClick={() => {
-            scrollTo(0, 0), setIsOpen(false);
+            scrollTo(0, 0);
+            setIsOpen(false);
           }}
           to="/"
         >
@@ -38,7 +38,8 @@ const Navbar = () => {
         </Link>
         <Link
           onClick={() => {
-            scrollTo(0, 0), setIsOpen(false);
+            scrollTo(0, 0);
+            setIsOpen(false);
           }}
           to="/movies"
         >
@@ -46,7 +47,8 @@ const Navbar = () => {
         </Link>
         <Link
           onClick={() => {
-            scrollTo(0, 0), setIsOpen(false);
+            scrollTo(0, 0);
+            setIsOpen(false);
           }}
           to="/"
         >
@@ -54,7 +56,8 @@ const Navbar = () => {
         </Link>
         <Link
           onClick={() => {
-            scrollTo(0, 0), setIsOpen(false);
+            scrollTo(0, 0);
+            setIsOpen(false);
           }}
           to="/"
         >
@@ -62,7 +65,8 @@ const Navbar = () => {
         </Link>
         <Link
           onClick={() => {
-            scrollTo(0, 0), setIsOpen(false);
+            scrollTo(0, 0);
+            setIsOpen(false);
           }}
           to="/favorites"
         >
@@ -82,7 +86,11 @@ const Navbar = () => {
         ) : (
           <UserButton>
             <UserButton.MenuItems>
-              <UserButton.Action label="My Bookings" labelIcon={<TicketPlus width={15}/>} onClick={()=> navigate('/my-bookings')}/>
+              <UserButton.Action
+                label="My Bookings"
+                labelIcon={<TicketPlus width={15} />}
+                onClick={() => navigate("/my-bookings")}
+              />
             </UserButton.MenuItems>
           </UserButton>
         )}
