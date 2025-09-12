@@ -1,5 +1,6 @@
 import { clerkClient } from "@clerk/express";
 import Booking from "../models/Booking.js";
+import movie from '../models/Movie.js'
 
 // API Controller Function to Get User Bookings
 export const getUserBookings = async (req, res) => {
@@ -52,7 +53,7 @@ export const getFavorites = async (req, res) => {
         const favorites = user.privateMetadata.favorites || [];
 
         // Getting movies from database
-        const movies = await Movie.find({ _id: { $in: favorites } });
+        const movies = await movie.find({ _id: { $in: favorites } });
 
         res.json({ success: true, movies });
     } catch (error) {
