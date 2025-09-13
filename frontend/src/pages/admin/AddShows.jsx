@@ -2,11 +2,19 @@ import React, { useEffect, useState } from "react";
 import { dummyShowsData } from "../../assets/assets";
 import Title from "../../components/admin/Title";
 import Loading from "../../components/Loading";
-import { CheckIcon, DeleteIcon, DollarSign, DollarSignIcon, StarIcon } from "lucide-react";
+import {
+  CheckIcon,
+  DeleteIcon,
+  DollarSign,
+  DollarSignIcon,
+  StarIcon,
+} from "lucide-react";
 import kConverter from "../../lib/kConverter";
 import { Currency } from "lucide-react";
+import { useAppContext } from "../../context/AppContext";
 
 const AddShows = () => {
+  const { axios, getToken, user, image_base_url } = useAppContext();
   const currency = import.meta.env.VITE_CURRENCY;
   const [nowPlayingMovies, setNowPlayingMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
@@ -15,7 +23,19 @@ const AddShows = () => {
   const [showPrice, setShowPrice] = useState("");
 
   const fetchNowPlayingMovies = async () => {
-    setNowPlayingMovies(dummyShowsData);
+    try {
+      console.log("1");
+      const { data } = await axios.get("/api/show/now-playing", {
+        headers: { Authorization: `Bearer ${await getToken()}` },
+      });
+      if (data.success) {
+        console.log("2");
+        setNowPlayingMovies(data.movies);
+      }
+    } catch (error) {
+      console.log("3");
+      console.error("Error fetching movies: ", error);
+    }
   };
 
   const handleDateTimeAdd = () => {
@@ -47,46 +67,49 @@ const AddShows = () => {
   };
 
   useEffect(() => {
-    fetchNowPlayingMovies();
-  }, []);
+    if (user) {
+      fetchNowPlayingMovies();
+    }
+  }, [user]);
 
   return nowPlayingMovies.length > 0 ? (
     <>
       <Title text1="Add" text2="Shows" />
       <p className="mt-10 text-lg font-medium">Now Playing Movies</p>
-      <div className="overflow-x-auto pb-4"></div>
-      <div className="group flex flex-wrap gap-4 mt-4 w-max">
-        {nowPlayingMovies.map((movie) => (
-          <div
-            key={movie.id}
-            className={`relative max-w-40 cursor-pointer group-hover:not-hover:opacity-40 hover:-translate-y-1 transition duration-300"`}
-            onClick={() => setSelectedMovie(movie.id)}
-          >
-            <div className="relative rounded-lg overflow-hidden">
-              <img
-                src={movie.poster_path}
-                alt=""
-                className="w-full object-cover brightness-90"
-              />
-              <div className="text-sm flex items-center justify-between p-2 bg-black/70 w-full absolute bottom-0 left-0">
-                <p className="flex items-center gap-1 text-gray-400">
-                  <StarIcon className="w-4 h-4 text-primary fill-primary" />
-                  {movie.vote_average.toFixed(1)}
-                </p>
-                <p className="text-gray-300">
-                  {kConverter(movie.vote_count)} Votes
-                </p>
+      <div className="overflow-x-auto pb-4">
+        <div className="group flex flex-wrap gap-4 mt-4 w-max">
+          {nowPlayingMovies.map((movie) => (
+            <div
+              key={movie.id}
+              className={`relative max-w-40 cursor-pointer group-hover:not-hover:opacity-40 hover:-translate-y-1 transition duration-300"`}
+              onClick={() => setSelectedMovie(movie.id)}
+            >
+              <div className="relative rounded-lg overflow-hidden">
+                <img
+                  src={image_base_url + movie.poster_path}
+                  alt=""
+                  className="w-full object-cover brightness-90"
+                />
+                <div className="text-sm flex items-center justify-between p-2 bg-black/70 w-full absolute bottom-0 left-0">
+                  <p className="flex items-center gap-1 text-gray-400">
+                    <StarIcon className="w-4 h-4 text-primary fill-primary" />
+                    {movie.vote_average.toFixed(1)}
+                  </p>
+                  <p className="text-gray-300">
+                    {kConverter(movie.vote_count)} Votes
+                  </p>
+                </div>
               </div>
+              {selectedMovie == movie.id && (
+                <div className="absolute top-2 right-2 flex items-center justify-center bg-primary h-6 w-6 rounded">
+                  <CheckIcon className="w-4 h-4 text-white" strokeWidth={2.5} />
+                </div>
+              )}
+              <p className="font-medium truncate">{movie.title}</p>
+              <p className="text-gray-400 text-sm"> {movie.release_date}</p>
             </div>
-            {selectedMovie == movie.id && (
-              <div className="absolute top-2 right-2 flex items-center justify-center bg-primary h-6 w-6 rounded">
-                <CheckIcon className="w-4 h-4 text-white" strokeWidth={2.5} />
-              </div>
-            )}
-            <p className="font-medium truncate">{movie.title}</p>
-            <p className="text-gray-400 text-sm"> {movie.release_date}</p>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
       {/* Show Price Input* */}
       <div className="mt-8">
