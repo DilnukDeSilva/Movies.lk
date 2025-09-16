@@ -1,25 +1,62 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { dummyBookingData, dummyShowsData, dummyDateTimeData } from "../assets/assets";
+import {
+  dummyBookingData,
+  dummyShowsData,
+  dummyDateTimeData,
+} from "../assets/assets";
 import BlurCircle from "../components/BlurCircle";
 import { Heart, PlayCircleIcon, StampIcon } from "lucide-react";
 import timeFormat from "../lib/timeFormat";
 import DateSelect from "../components/DateSelect";
-import MovieCard from "../components/MovieCard"
-import Loading from "../components/Loading"
+import MovieCard from "../components/MovieCard";
+import Loading from "../components/Loading";
+import { useAppContext } from "../context/AppContext";
+import toast from "react-hot-toast";
 
 const MovieDetails = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { id } = useParams();
   const [show, setShow] = useState(null);
+  const {
+    shows,
+    axios,
+    getToken,
+    user,
+    fetchFavoriteMovies,
+    favoriteMovies,
+    image_base_url,
+  } = useAppContext();
 
   const getShow = async () => {
-    const show = dummyShowsData.find((show) => show._id === id);
-    if(show){
-      setShow({
-      movie: show,
-      dateTime: dummyDateTimeData,
-      })
+    try {
+      const { data } = await axios.get(`/api/show/${id}`);
+      if (data.success) {
+        setShow(data);
+        console.log(data)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleFavorite = async () => {
+    try {
+      
+      if (!user) return toast.error("Please login to proceed");
+
+      const { data } = await axios.post(
+        "/api/user/update-favorite",
+        { movieId: id },
+        { headers: { Authorization: `Bearer ${await getToken()}` },}
+      );
+
+      if (data.success) {
+        await fetchFavoriteMovies();
+        toast.success(data.message);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -31,7 +68,7 @@ const MovieDetails = () => {
     <div className="px-6 md:px lg:px-40 pt-30 md:pt-50">
       <div className="flex flex-col md:flex-row gap-8 max-w-6xl mx-auto">
         <img
-          src={show.movie.poster_path}
+          src={image_base_url + show.movie.poster_path}
           alt=""
           className="max-md:mx-auto rounded-xl h-104 max-w-70 object-cover"
         />
@@ -65,11 +102,12 @@ const MovieDetails = () => {
             <a
               href="#dateSelect"
               className="px-10 py-3 text-sm bg-primary hover:bg-primary-dull transition rounded-md font-medium cursor-pointer active:sacle-95"
+              
             >
               Buy Tickets
             </a>
-            <button>
-              <Heart className={"w-5 h-5"} />
+            <button onClick={handleFavorite} className="bg-gray-700 p-2.5 rounded-full transition cursor-pointer active:sacle-95">
+              <Heart className={`w-5 h-5 ${favoriteMovies.find(movie => movie._id === id) ? 'fill-primary text-primary' : "" }`} />
             </button>
           </div>
         </div>
@@ -81,7 +119,7 @@ const MovieDetails = () => {
           {show.movie.casts.slice(0, 12).map((cast, index) => (
             <div key={index} className="flex flex-col items-center text-center">
               <img
-                src={cast.profile_path}
+                src={image_base_url + cast.profile_path}
                 alt=""
                 className="rounded-full h-20 md:h-20 aspect-square object-cover"
               />
@@ -91,22 +129,29 @@ const MovieDetails = () => {
         </div>
       </div>
 
-      <DateSelect dateTime={show.dateTime} id={id}/>
+      <DateSelect dateTime={show.dateTime} id={id} />
 
       <p className="text-lg font-medium mt-20 mb-8">You May Also Like</p>
       <div className="flex flex-wrap max-sm:juatify-center gap-8">
-          {dummyShowsData.slice(0,4).map((movie, index)=>(
-            <MovieCard key={index} movie={movie}/>
-          ))}
+        {shows.slice(0, 4).map((movie, index) => (
+          <MovieCard key={index} movie={movie} />
+        ))}
       </div>
       <div className="flex justify-center mt-20">
-        <button onClick={()=> {navigate('/movies'); scrollTo(0,0)}} className='px-10 py-3 text-sm bg-primary hover:bg-primary-dull translation rounded-md font-medium cursor-pointer'>Show more
-
+        <button
+          onClick={() => {
+            navigate("/movies");
+            scrollTo(0, 0);
+          }}
+          className="px-10 py-3 text-sm bg-primary hover:bg-primary-dull translation rounded-md font-medium cursor-pointer"
+        >
+          Show more
         </button>
-
       </div>
     </div>
-  ) : <Loading/>
+  ) : (
+    <Loading />
+  );
 };
 
 export default MovieDetails;
