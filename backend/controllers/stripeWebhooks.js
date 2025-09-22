@@ -33,7 +33,7 @@ export const stripeWebhooks = async (request, response) => {
             isPaid: true,
             paymentLink: ""
           })
-        }
+        
 
         // send confirmation email
         await inngest.send({
@@ -41,7 +41,7 @@ export const stripeWebhooks = async (request, response) => {
           data: { bookingId }
         })
         break;
-
+      }
       default:
         console.log('Unhandled event type: ', event.type)
     }
