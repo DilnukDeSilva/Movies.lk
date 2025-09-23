@@ -1,31 +1,120 @@
+// FeatureSection.jsx
 import { ArrowRight } from "lucide-react";
-import React from "react";
+import React, { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import BlurCircle from "./BlurCircle";
-import { dummyShowsData } from "../assets/assets";
 import MovieCard from "./MovieCard";
 import { useAppContext } from "../context/AppContext";
+import { motion } from "framer-motion";
 
 const FeatureSection = () => {
-
-  const {shows} = useAppContext();
+  const { shows } = useAppContext();
   const navigate = useNavigate();
+
+  const items = useMemo(() => shows.slice(0, 9), [shows]);
+  const len = items.length;
+  const [activeIndex, setActiveIndex] = useState(Math.floor(len / 2) || 0);
+
+  if (len === 0) return null;
+
+  const spacing = 180;
+  const half = Math.floor(len / 2);
+
+  const next = () => setActiveIndex((i) => (i + 1) % len);
+  const prev = () => setActiveIndex((i) => (i - 1 + len) % len); // 🔥 FIX: prev should decrement
+
   return (
     <div className="px-6 md:px-16 lg:px-24 xl:px-44 overflow-hidden">
+      {/* Header */}
       <div className="relative flex items-center justify-between pt-20 pb-10">
         <BlurCircle top="0" right="-80px" />
         <p className="text-gray-300 font-medium text-lg">Now Showing</p>
         <button
           onClick={() => navigate("/movies")}
-          className="group flex items-center gap-2 text-sm test-gray-300 cursor-pointer"
+          className="group flex items-center gap-2 text-sm text-gray-300 cursor-pointer"
         >
           View All
           <ArrowRight className="group-hover:translate-x-0.5 transition w-4.5 h-4.5" />
         </button>
       </div>
-      <div className="flex flex-wrap mas-sm:justify-center gap-8 mt-8">  
-        {shows.slice(0,4).map((show)=>(<MovieCard key={show._id} movie={show}/>))}
+
+      {/* Carousel wrapper */}
+      <div className="w-full flex justify-center pr-20">
+        <div className="relative w-full max-w-[960px] h-[420px]">
+          {/* Cards */}
+          {items.map((show, idx) => {
+            let offset = idx - activeIndex;
+            if (offset > half) offset -= len;
+            if (offset < -half) offset += len;
+
+            const abs = Math.abs(offset);
+            const translateX = offset * spacing;
+            const scale = Math.max(0.6, 1 - 0.12 * abs);
+            const opacity = abs > 3 ? 0 : 1 - abs * 0.15;
+            const zIndex = 100 - abs;
+
+            return (
+              <motion.div
+                key={show._id}
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                style={{ zIndex }}
+                animate={{ x: translateX, scale, opacity }}
+                initial={false}
+                transition={{ type: "spring", stiffness: 220, damping: 25 }}
+              >
+                <div
+                  className="w-[260px] sm:w-[220px] cursor-pointer"
+                  // 🔥 Only navigate if this is the ACTIVE (center) card
+                  onClick={() => {
+                    if (idx === activeIndex) {
+                      navigate(`/movies/${show._id}`);
+                    } else {
+                      setActiveIndex(idx);
+                    }
+                  }}
+                >
+                  <MovieCard movie={show} isActive={idx === activeIndex} />
+
+                </div>
+              </motion.div>
+            );
+          })}
+
+          {/* Prev / Next buttons */}
+          {/* 🔥 Changed `fixed` → `absolute` so they stay inside carousel */}
+          <button
+            onClick={prev}
+            aria-label="Previous"
+            className="absolute left-0 top-1/2 -translate-y-1/2 px-3 py-2 bg-white/10 hover:bg-white/20 rounded-full text-white"
+          >
+            ◀
+          </button>
+
+          <button
+            onClick={next}
+            aria-label="Next"
+            className="absolute right- top-1/2 -translate-y-1/2 px-3 py-2 bg-white/10 hover:bg-white/20 rounded-full text-white"
+          >
+            ▶
+          </button>
+        </div>
       </div>
+
+      {/* Dots */}
+      <div className="flex justify-center mt-8 space-x-3">
+        {items.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setActiveIndex(i)}
+            className={`w-3 h-3 rounded-full transition ${
+              i === activeIndex ? "bg-white" : "bg-gray-400/70"
+            }`}
+            aria-label={`Go to slide ${i + 1}`}
+          />
+        ))}
+      </div>
+
+      {/* Show more */}
       <div className="flex justify-center mt-20">
         <button
           onClick={() => {
