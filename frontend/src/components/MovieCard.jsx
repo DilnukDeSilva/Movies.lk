@@ -8,6 +8,9 @@ const MovieCard = ({ movie, isActive }) => {
   const { image_base_url } = useAppContext();
   const navigate = useNavigate();
 
+  // If `isActive` is undefined, treat it as "always active"
+  const active = isActive === undefined ? true : isActive;
+
   return (
     <div className="flex flex-col justify-between p-3 bg-gray-800 rounded-2xl hover:-translate-y-1 transition duration-300 w-66">
       <img
@@ -30,14 +33,14 @@ const MovieCard = ({ movie, isActive }) => {
       <div className="flex items-center justify-between mt-4 pb-3">
         <button
           onClick={() => {
-            if (isActive) {
+            if (active) {
               navigate(`/movies/${movie._id}`);
               scrollTo(0, 0);
             }
           }}
-          disabled={!isActive}
+          disabled={!active}
           className={`px-4 py-2 text-xs rounded-full font-medium transition ${
-            isActive
+            active
               ? "bg-primary hover:bg-primary-dull cursor-pointer"
               : "bg-gray-600 text-gray-400 cursor-pointer"
           }`}
@@ -53,6 +56,5 @@ const MovieCard = ({ movie, isActive }) => {
     </div>
   );
 };
-
 
 export default MovieCard;
