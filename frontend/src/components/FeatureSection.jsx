@@ -39,8 +39,8 @@ const FeatureSection = () => {
       </div>
 
       {/* Carousel wrapper */}
-      <div className="w-full flex justify-center pr-20">
-        <div className="relative w-full max-w-[960px] h-[420px]">
+      <div className="w-full flex justify-center pr-22">
+        <div className="relative w-full max-w-[960px] h-[420px] mx-auto">
           {/* Cards */}
           {items.map((show, idx) => {
             let offset = idx - activeIndex;
@@ -79,24 +79,6 @@ const FeatureSection = () => {
               </motion.div>
             );
           })}
-
-          {/* Prev / Next buttons */}
-          {/* 🔥 Changed `fixed` → `absolute` so they stay inside carousel */}
-          <button
-            onClick={prev}
-            aria-label="Previous"
-            className="absolute left-0 top-1/2 -translate-y-1/2 px-3 py-2 bg-white/10 hover:bg-white/20 rounded-full text-white"
-          >
-            ◀
-          </button>
-
-          <button
-            onClick={next}
-            aria-label="Next"
-            className="absolute right- top-1/2 -translate-y-1/2 px-3 py-2 bg-white/10 hover:bg-white/20 rounded-full text-white"
-          >
-            ▶
-          </button>
         </div>
       </div>
 
