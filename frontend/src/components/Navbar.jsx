@@ -14,13 +14,13 @@ const Navbar = () => {
   const { favoriteMovies } = useAppContext();
 
   return (
-    <div className="absolute top-0 left-0 z-50 w-full flex items-center justify-between px-6 md:px-16 md:px-36 py-3 backdrop-blur-sm bg-black/10 md:bg-black/10 border border-gray-300/40">
+    <div className="absolute top-0 left-0 z-50 w-full flex items-center justify-between px-6 md:px-16 md:px-36 py-3 backdrop-blur-sm bg-black/10 md:bg-black/10 border-t border-b border-gray-300/40">
       <Link to="/" className="max-md:flex-1">
         <img src={assets.Movie} alt="" classsname="w-36 h-auto" />
       </Link>
 
       <div
-        className={`max-md:absolute max-md:top-0 max-md:left-0 max-md:font-medium max-md:text-lg z-50 flex flex-col md:flex-row items-center max-md:justify-center gap-8 min-md:px-8 py-3 max-md:h-screen min-md:rounded-full border border-gray-300/40 overflow-hidden transition-[width] duration-30 ${
+        className={`max-md:absolute max-md:top-0 max-md:left-0 max-md:font-medium max-md:text-lg z-50 flex flex-col md:flex-row items-center max-md:justify-center gap-8 min-md:px-8 py-1 max-md:h-screen min-md:rounded-full border-gray-300/40 overflow-hidden transition-[width] duration-30 ${
           isOpen ? "max-md:w-full" : "max-md:w-0"
         }`}
       >

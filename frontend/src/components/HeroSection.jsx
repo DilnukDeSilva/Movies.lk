@@ -42,23 +42,21 @@ const HeroSection = () => {
         backgroundImage: `url(${IMAGE_BASE}${currentMovie.backdrop_path})`,
       }}
     >
-<div className="backdrop-blur-sm bg-black/10 p-4 rounded-lg border border-gray-300/30">
+      <div className="backdrop-blur-sm bg-black/10 p-4 rounded-lg border border-gray-300/30">
+        <h1 className="text-5xl md:text-[70px] font-semibold max-w-110">
+          {currentMovie.title}
+        </h1>
 
-  <h1 className="text-5xl md:text-[70px] font-semibold max-w-110">
-    {currentMovie.title}
-  </h1>
+        <div className="flex items-center gap-4 text-gray-100 mt-2 mb-2">
+          <span> {currentMovie.vote_average.toFixed(1)} / 10</span>
+          <div className="flex items-center gap-1">
+            <CalendarIcon className="w-4.5 h-4.5" />{" "}
+            {currentMovie.release_date?.split("-")[0]}
+          </div>
+        </div>
 
-  <div className="flex items-center gap-4 text-gray-100 mt-2 mb-2">
-    <span> {currentMovie.vote_average.toFixed(1)} / 10</span>
-    <div className="flex items-center gap-1">
-      <CalendarIcon className="w-4.5 h-4.5" />{" "}
-      {currentMovie.release_date?.split("-")[0]}
-    </div>
-  </div>
-
-  <p className="max-w-md text-gray-50">{currentMovie.overview}</p>
-</div>
-
+        <p className="max-w-md text-gray-50">{currentMovie.overview}</p>
+      </div>
 
       <button
         onClick={() => navigate("/movies")}
