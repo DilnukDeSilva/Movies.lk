@@ -14,7 +14,8 @@ const MovieCard = ({ movie, isActive }) => {
   return (
     <div className="flex flex-col justify-between p-3 bg-gray-800 rounded-2xl hover:-translate-y-1 transition duration-300 w-66">
       <img
-        src={image_base_url + movie.backdrop_path}
+        //src={image_base_url + movie.backdrop_path}
+        src={`${image_base_url.replace("original", "w780")}${movie.backdrop_path}`}
         alt=""
         className="rounded-lg h-52 w-full object-cover object-right-bottom cursor-pointer"
       />

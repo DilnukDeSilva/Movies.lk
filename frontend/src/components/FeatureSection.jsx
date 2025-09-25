@@ -11,7 +11,7 @@ const FeatureSection = () => {
   const { shows } = useAppContext();
   const navigate = useNavigate();
 
-  const items = useMemo(() => shows.slice(0, 9), [shows]);
+  const items = useMemo(() => shows.slice(0, 11), [shows]);
   const len = items.length;
   const [activeIndex, setActiveIndex] = useState(Math.floor(len / 2) || 0);
 
