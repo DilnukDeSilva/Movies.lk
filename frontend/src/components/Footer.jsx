@@ -8,7 +8,7 @@ const Footer = () => {
         <div className="md:max-w-96">
           <img alt="" className="h-11" src={assets.Movie} />
           <p className="mt-6 text-sm">
-            MovieTime is your one-stop destination for booking tickets to the
+            <b>Movies.lk</b> is your one-stop destination for booking tickets to the
             latest blockbusters, timeless classics, and everything in between.
             Browse showtimes, discover new releases, and reserve your seats with
             ease. Enjoy a seamless booking experience and never miss the magic
@@ -52,7 +52,7 @@ const Footer = () => {
       </div>
       <p className="pt-4 text-center text-sm pb-5">
         Copyright {new Date().getFullYear()} ©{" "}
-        <a href="https://Dilbuk.com">Dilnuk</a>. All Right Reserved.
+        <a href="https://Dilbuk.com">Dilnuk De Silva</a>. All Right Reserved.
       </p>
     </footer>
   );
