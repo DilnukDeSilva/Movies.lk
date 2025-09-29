@@ -8,6 +8,7 @@ import BlurCircle from "../components/BlurCircle";
 import { assets } from "../assets/assets";
 import toast from "react-hot-toast";
 import { useAppContext } from "../context/AppContext";
+import { seatLayouts } from "../lib/seatLayouts";
 
 const SeatLayout = () => {
   const groupRows = [
@@ -22,6 +23,11 @@ const SeatLayout = () => {
   const [selectedTime, setSelectedTime] = useState(null);
   const [show, setShow] = useState(null);
   const [occupiedSeats, setOccupiedSeats] = useState([]);
+  const seatLayout = selectedTime?.seatLayout || "layout1";
+  const layoutConfig = seatLayouts[seatLayout] || seatLayouts.layout1;
+
+  console.log("Seat layout from DB:", seatLayout);
+  console.log("Available seatLayouts keys:", Object.keys(seatLayouts));
 
   const navigate = useNavigate();
 
@@ -45,14 +51,14 @@ const SeatLayout = () => {
     if (!selectedSeats.includes(seatId) && selectedSeats.length > 4) {
       return toast("You can only select 5 seats");
     }
-    if(occupiedSeats.includes(seatId)){
-      return toast('This seat is already booked');
+    if (occupiedSeats.includes(seatId)) {
+      return toast("This seat is already booked");
     }
-    setSelectedSeats(prev =>
+    setSelectedSeats((prev) =>
       prev.includes(seatId)
-        ? prev.filter(seat => seat !== seatId)
+        ? prev.filter((seat) => seat !== seatId)
         : [...prev, seatId]
-    )
+    );
   };
 
   const renderSeats = (row, count = 9) => (
@@ -91,35 +97,40 @@ const SeatLayout = () => {
     }
   };
 
-  const bookTickets = async ()=> {
+  const bookTickets = async () => {
     try {
-      if (!user) return toast.error('Please login to proceed');
+      if (!user) return toast.error("Please login to proceed");
 
-      if (!selectedTime || !selectedSeats.length) return toast.error('Please select a time and seats');
+      if (!selectedTime || !selectedSeats.length)
+        return toast.error("Please select a time and seats");
 
-      const {data} = await axios.post('/api/booking/create', {showId: selectedTime.showId, selectedSeats}, {headers: { Authorization: `Bearer ${await getToken()}`}});
+      const { data } = await axios.post(
+        "/api/booking/create",
+        { showId: selectedTime.showId, selectedSeats },
+        { headers: { Authorization: `Bearer ${await getToken()}` } }
+      );
 
-      if(data.success){
+      if (data.success) {
         window.location.href = data.url;
         // toast.success(data.message)
         // navigate('/my-bookings')
       } else {
-        toast.error(data.message)
+        toast.error(data.message);
       }
     } catch (error) {
       toast.error(error.message);
     }
-  }
+  };
 
   useEffect(() => {
     getShow();
   }, []);
 
-  useEffect(()=>{
-    if(selectedTime){
-      getOccupiedSeats()
+  useEffect(() => {
+    if (selectedTime) {
+      getOccupiedSeats();
     }
-  },[selectedTime])
+  }, [selectedTime]);
 
   return show ? (
     <div className="flex flex-col md:flex-row px-6 md:px-16 lg:px-40 py-30 md:pt-50">
@@ -130,7 +141,9 @@ const SeatLayout = () => {
           {show.dateTime[date].map((item) => (
             <div
               key={item.time}
-              onClick={() => setSelectedTime(item)}
+              onClick={() => {
+                setSelectedTime(item);
+              }}
               className={`flex items-center gap-2 px-6 py-2 w-max rounded-r-md cursor-pointer transition ${
                 selectedTime?.time === item.time
                   ? "bg-primary text-white"
@@ -145,7 +158,7 @@ const SeatLayout = () => {
       </div>
 
       <div className="relative flex-1 flex flex-col items-center max-md:mt-16">
-        {/*Seat layout */}
+        {/*Seat layout (only after selecting a time)*/}
         <BlurCircle top="-100px" left="-100px" />
         <BlurCircle top="0px" right="0px" />
         <h1 className="text-2xl font-semibold mb-4">Select Your Seat</h1>
@@ -153,12 +166,16 @@ const SeatLayout = () => {
         <p className="text-gray-400 text-sm mb-6">SCREEN SIDE</p>
         <div className="flex flex-col items-center mt-10 text-xs text-gray-300">
           <div className="grid grid-cols-2 md:grid-cols-1 gap-8 md:gap-2 mb-6">
-            {groupRows[0].map((row) => renderSeats(row))}
+            {layoutConfig.groups[0].map((row) =>
+              renderSeats(row, layoutConfig.seatsPerRow)
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-11">
-            {groupRows.slice(1).map((group, idx) => (
-              <div key={idx}>{group.map((row) => renderSeats(row))}</div>
+            {layoutConfig.groups.slice(1).map((group, idx) => (
+              <div key={idx}>
+                {group.map((row) => renderSeats(row, layoutConfig.seatsPerRow))}
+              </div>
             ))}
           </div>
         </div>

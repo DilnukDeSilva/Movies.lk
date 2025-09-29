@@ -27,7 +27,7 @@ export const getNowPlayingMovies = async (req, res) => {
 // Api to add a new show to the database
 export const addShow = async (req, res) => {
   try {
-    const { movieId, showsInput, showPrice } = req.body;
+    const { movieId, showsInput, showPrice, seatLayout } = req.body;
 
     let movie = await Movie.findById(movieId);
 
@@ -58,38 +58,38 @@ export const addShow = async (req, res) => {
         tagline: movieApiData.tagline || "",
         vote_average: movieApiData.vote_average,
         runtime: movieApiData.runtime,
-      } 
+      };
 
       // Add movie to the database
       movie = await Movie.create(movieDetails);
     }
 
     const showsToCreate = [];
-    showsInput.forEach(show => {
+    showsInput.forEach((show) => {
       const showDate = show.date;
-      show.time.forEach((time)=> {
+      show.time.forEach((time) => {
         const dateTimeString = `${showDate}T${time}`;
         showsToCreate.push({
           movie: movieId,
           showDateTime: new Date(dateTimeString),
           showPrice,
-          occupiedSeats:{}
-        })
-      })
+          seatLayout,
+          occupiedSeats: {},
+        });
+      });
     });
 
-    if(showsToCreate.length > 0){
+    if (showsToCreate.length > 0) {
       await Show.insertMany(showsToCreate);
     }
 
     // triger inngest event
     await inngest.send({
       name: "app/show.added",
-      data: {movieTitle: movie.title}
-    })
+      data: { movieTitle: movie.title },
+    });
 
-    res.json({ success: true, message: 'show Added successfully.' });
-
+    res.json({ success: true, message: "show Added successfully." });
   } catch (error) {
     console.error(error);
     res.json({ success: false, message: error.message });
@@ -98,43 +98,59 @@ export const addShow = async (req, res) => {
 
 // API to get all shows from the database
 export const getShows = async (req, res) => {
-    try {
-        const shows = await Show.find({ showDateTime: { $gte: new Date() } })
-            .populate('movie')
-            .sort({ showDateTime: 1 });
+  try {
+    const shows = await Show.find({ showDateTime: { $gte: new Date() } })
+      .populate("movie")
+      .sort({ showDateTime: 1 });
 
-        // filter unique shows
-        const uniqueShows = new Set(shows.map(show => show.movie));
+    // filter unique shows
+    const uniqueShows = new Set(shows.map((show) => show.movie));
 
-        res.json({ success: true, shows: Array.from(uniqueShows) });
-    } catch (error) {
-        console.error(error);
-        console.log("hi")
-        res.json({ success: false, message: error.message });
-    }
+    res.json({ success: true, shows: Array.from(uniqueShows) });
+  } catch (error) {
+    console.error(error);
+    console.log("hi");
+    res.json({ success: false, message: error.message });
+  }
 };
 
-// API to get a single show from the database
+// API to get a single movie's shows from the database
 export const getShow = async (req, res) => {
-    try {
-        const { movieId } = req.params;
-        // get all upcoming shows for the movie
-        const shows = await Show.find({ movie: movieId, showDateTime: { $gte: new Date() } });
-        
-        const movie = await Movie.findById(movieId);
-        const dateTime = {};
-        
-        shows.forEach((show) => {
-            const date = show.showDateTime.toISOString().split("T")[0];
-            if (!dateTime[date]) {
-                dateTime[date] = [];
-            }
-            dateTime[date].push({time: show.showDateTime, showId: show._id});
-        })        
-        res.json({ success: true, movie, dateTime });
+  try {
+    const { movieId } = req.params;
 
-    } catch (error) {
-        console.error(error);
-        res.json({ success: false, message: error.message });
+    // get all upcoming shows for the movie
+    const shows = await Show.find({
+      movie: movieId,
+      showDateTime: { $gte: new Date() },
+    });
+
+    if (!shows.length) {
+      return res.json({ success: false, message: "No shows found" });
     }
+
+    const movie = await Movie.findById(movieId);
+    const dateTime = {};
+
+    shows.forEach((show) => {
+      const date = show.showDateTime.toISOString().split("T")[0];
+      if (!dateTime[date]) {
+        dateTime[date] = [];
+      }
+      dateTime[date].push({
+        time: show.showDateTime,
+        showId: show._id,
+        seatLayout: show.seatLayout, // include layout here
+        showPrice: show.showPrice, // optional, include price
+      });
+    });
+
+    // Just use the seatLayout of the first show (assuming all shows of this movie share the same layout)
+    const seatLayout = shows[0].seatLayout || "layout1";
+
+    res.json({ success: true, movie, dateTime, seatLayout });
+  } catch (error) {
+    console.error(error);
+    res.json({ success: false, message: error.message });
+  }
 };

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { dummyShowsData } from "../../assets/assets";
 import Title from "../../components/admin/Title";
 import Loading from "../../components/Loading";
+import { seatLayouts } from "../../lib/seatLayouts";
+
 import {
   CheckIcon,
   DeleteIcon,
@@ -23,6 +25,7 @@ const AddShows = () => {
   const [DateTimeInput, setDateTimeInput] = useState("");
   const [showPrice, setShowPrice] = useState("");
   const [addingShow, setAddingShow] = useState(false);
+  const [selectedLayout, setSelectedLayout] = useState("layout1");
 
   const fetchNowPlayingMovies = async () => {
     try {
@@ -88,6 +91,7 @@ const AddShows = () => {
         movieId: selectedMovie,
         showsInput,
         showPrice: Number(showPrice),
+        seatLayout: selectedLayout,
       };
 
       const { data } = await axios.post("/api/show/add", payload, {
@@ -220,6 +224,22 @@ const AddShows = () => {
           </ul>
         </div>
       )}
+      {/*Display Seat Layouts */}
+
+      <div className="mt-6">
+        <label className="block text-sm font-medium mb-2">Seat Layout</label>
+        <select
+          value={selectedLayout}
+          onChange={(e) => setSelectedLayout(e.target.value)}
+          className="border border-gray-500 p-2 rounded-lg"
+        >
+          {Object.entries(seatLayouts).map(([key, layout]) => (
+            <option key={key} value={key}>
+              {layout.name}
+            </option>
+          ))}
+        </select>
+      </div>
       <button
         onClick={handleSubmit}
         disabled={addingShow}
