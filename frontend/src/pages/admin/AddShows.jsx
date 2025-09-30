@@ -161,17 +161,17 @@ const AddShows = () => {
       </div>
       {/* Show Price Input* */}
       <div className="mt-8">
-        <label className="block text-sm font-medium mb-2">Show Price</label>
+        <label className="block text-sm font-medium mb-2">Enter Price For The Show</label>
         <div className="inline-flex items-center gap-2 border border-gray-600 px-3 py-2 rounded-md">
           <p className="text-gray-400 text-sm">
-            <DollarSign />
+            
           </p>
           <input
             min={0}
             type="number"
             value={showPrice}
             onChange={(e) => setShowPrice(e.target.value)}
-            placeholder="Enter show price"
+            placeholder="$ Enter Price For the Show"
             className="outline-none"
           />
         </div>
@@ -192,7 +192,7 @@ const AddShows = () => {
             onClick={handleDateTimeAdd}
             className="bg-primary/80 text-white px-3 py-2 text-sm rounded-lg hover:bg-primary cursor-pointer"
           >
-            Add Time
+            Select Date And Time
           </button>
         </div>
       </div>
@@ -227,14 +227,14 @@ const AddShows = () => {
       {/*Display Seat Layouts */}
 
       <div className="mt-6">
-        <label className="block text-sm font-medium mb-2">Seat Layout</label>
+        <label className="block text-sm font-medium mb-2">Select Cinema Hall</label>
         <select
           value={selectedLayout}
           onChange={(e) => setSelectedLayout(e.target.value)}
-          className="border border-gray-500 p-2 rounded-lg"
+          className="border border-gray-600 p-2 rounded-lg"
         >
           {Object.entries(seatLayouts).map(([key, layout]) => (
-            <option key={key} value={key}>
+            <option key={key} value={key} className="bg-gray-800 text-white">
               {layout.name}
             </option>
           ))}
