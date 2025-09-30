@@ -1,6 +1,5 @@
 import React, { use, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { dummyDateTimeData, dummyShowsData } from "../assets/assets";
 import Loading from "../components/Loading";
 import { ArrowRightIcon, ClockIcon } from "lucide-react";
 import isoTimeFormat from "../lib/isoTimeFormat";
@@ -172,9 +171,9 @@ const SeatLayout = () => {
         <BlurCircle top="100px" left="-100px" />
         <BlurCircle top="0px" right="100px" />
         <BlurCircle top="500px" right="500px" />
-        <h1 className="text-2xl font-semibold mb-1">Select Your Seat</h1>
+        <h1 className="text-2xl font-semibold mb-5">Select Your Seat</h1>
         <img src={assets.screenImage} alt="screen" />
-        <p className="text-gray-400 text-sm mb-1">SCREEN SIDE</p>
+        <p className="text-gray-400 text-sm mb-0">SCREEN SIDE</p>
         {selectedTime ? (
           <div className="flex flex-col items-center mt-10 text-xs text-gray-300">
             {/* If layout3, layout4, layout5 → stack rows vertically */}
@@ -212,7 +211,7 @@ const SeatLayout = () => {
         <button
           onClick={bookTickets}
           disabled={!selectedTime}
-          className={`flex items-center gap-1 mt-20 px-10 py-3 text-sm rounded-full font-medium cursor-pointer active:scale-95 transition
+          className={`flex items-center gap-1 mt-15 px-10 py-3 text-sm rounded-full font-medium cursor-pointer active:scale-95 transition
           ${
             !selectedTime
               ? "bg-gray-400 cursor-not-allowed opacity-70"
