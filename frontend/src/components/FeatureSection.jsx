@@ -39,7 +39,7 @@ const FeatureSection = () => {
       </div>
 
       {/* Carousel wrapper */}
-      <div className="w-full flex justify-center pr-25">
+      <div className="w-full flex justify-center">
         <div className="relative w-full max-w-[960px] h-[420px] mx-auto">
           {/* Cards */}
           {items.map((show, idx) => {
