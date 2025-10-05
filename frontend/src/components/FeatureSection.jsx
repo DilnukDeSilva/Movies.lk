@@ -24,7 +24,7 @@ const FeatureSection = () => {
   const prev = () => setActiveIndex((i) => (i - 1 + len) % len); // 🔥 FIX: prev should decrement
 
   return (
-    <div className="px-6 md:px-16 lg:px-24 xl:px-44 overflow-hidden">
+    <div className="px-6 md:px-16 lg:px-24 xl:px-44 overflow-hidden items-center">
       {/* Header */}
       <div className="relative flex items-center justify-between pt-20 pb-10">
         <BlurCircle top="0" right="-80px" />
@@ -39,7 +39,7 @@ const FeatureSection = () => {
       </div>
 
       {/* Carousel wrapper */}
-      <div className="w-full flex justify-center pr-22">
+      <div className="w-full flex justify-center">
         <div className="relative w-full max-w-[960px] h-[420px] mx-auto">
           {/* Cards */}
           {items.map((show, idx) => {
@@ -49,8 +49,8 @@ const FeatureSection = () => {
 
             const abs = Math.abs(offset);
             const translateX = offset * spacing;
-            const scale = Math.max(0.6, 1 - 0.12 * abs);
-            const opacity = abs > 3 ? 0 : 1 - abs * 0.15;
+            const scale = Math.max(0.6, 1.2 - 0.19 * abs);
+            const opacity = abs > 3 ? 0 : 1 - abs * 0.16;
             const zIndex = 100 - abs;
 
             return (
@@ -60,7 +60,7 @@ const FeatureSection = () => {
                 style={{ zIndex }}
                 animate={{ x: translateX, scale, opacity }}
                 initial={false}
-                transition={{ type: "spring", stiffness: 220, damping: 25 }}
+                transition={{ type: "spring", stiffness: 250, damping: 20 }}
               >
                 <div
                   className="w-[260px] sm:w-[220px] cursor-pointer"
@@ -83,7 +83,7 @@ const FeatureSection = () => {
       </div>
 
       {/* Dots */}
-      <div className="flex justify-center mt-8 space-x-3">
+      <div className="flex justify-center mt-20 space-x-3">
         {items.map((_, i) => (
           <button
             key={i}
