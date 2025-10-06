@@ -49,22 +49,22 @@ const FeatureSection = () => {
 
             const abs = Math.abs(offset);
             const translateX = offset * spacing;
-            const scale = Math.max(0.6, 1.2 - 0.19 * abs);
-            const opacity = abs > 3 ? 0 : 1 - abs * 0.16;
+            const scale = Math.max(0.6, 1 - 0.2 * abs);
+            const opacity = abs > 3 ? 0 : 1 - abs * 0.2;
             const zIndex = 100 - abs;
 
             return (
               <motion.div
                 key={show._id}
-                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pr-20"
                 style={{ zIndex }}
                 animate={{ x: translateX, scale, opacity }}
                 initial={false}
-                transition={{ type: "spring", stiffness: 250, damping: 20 }}
+                transition={{ type: "spring", stiffness: 300, damping: 35 }}
               >
                 <div
                   className="w-[260px] sm:w-[220px] cursor-pointer"
-                  // 🔥 Only navigate if this is the ACTIVE (center) card
+                  // Only navigate if this is the ACTIVE (center) card
                   onClick={() => {
                     if (idx === activeIndex) {
                       navigate(`/movies/${show._id}`);

@@ -16,7 +16,11 @@ const HeroSection = () => {
       try {
         const res = await fetch(API_URL);
         const data = await res.json();
-        setMovies(data.results || []);
+        const filteredMovies = (data.results || []).filter(
+          (movie) => movie.vote_average > 7.2
+        );
+
+      setMovies(filteredMovies);
       } catch (err) {
         console.error("Error fetching movies:", err);
       }
