@@ -39,8 +39,23 @@ const FeatureSection = () => {
       </div>
 
       {/* Carousel wrapper */}
+
       <div className="w-full flex justify-center">
-        <div className="relative w-full max-w-[960px] h-[420px] mx-auto">
+        <motion.div
+          className="relative w-full max-w-[960px] h-[420px] mx-auto"
+          drag="x"
+          dragConstraints={{ left: 0, right: 0 }}
+          onDragEnd={(event, info) => {
+            const threshold = 50; // minimum px to swipe
+            if (info.offset.x > threshold) {
+              // swipe right → previous movie
+              setActiveIndex((i) => (i - 1 + len) % len);
+            } else if (info.offset.x < -threshold) {
+              // swipe left → next movie
+              setActiveIndex((i) => (i + 1) % len);
+            }
+          }}
+        >
           {/* Cards */}
           {items.map((show, idx) => {
             let offset = idx - activeIndex;
@@ -48,7 +63,8 @@ const FeatureSection = () => {
             if (offset < -half) offset += len;
 
             const abs = Math.abs(offset);
-            const spacing = 240; 
+            const spacing = window.innerWidth < 640 ? 140 : window.innerWidth < 1024 ? 200 : 240;
+            //const spacing = 240;
             const translateX = offset * spacing;
             const scale = Math.max(0.75, 1.1 - 0.15 * abs);
             const opacity = abs > 3 ? 0 : 1 - abs * 0.15;
@@ -75,12 +91,11 @@ const FeatureSection = () => {
                   }}
                 >
                   <MovieCard movie={show} isActive={idx === activeIndex} />
-
                 </div>
               </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       </div>
 
       {/* Dots */}
