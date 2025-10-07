@@ -48,22 +48,23 @@ const FeatureSection = () => {
             if (offset < -half) offset += len;
 
             const abs = Math.abs(offset);
+            const spacing = 240; 
             const translateX = offset * spacing;
-            const scale = Math.max(0.6, 1 - 0.2 * abs);
-            const opacity = abs > 3 ? 0 : 1 - abs * 0.2;
+            const scale = Math.max(0.75, 1.1 - 0.15 * abs);
+            const opacity = abs > 3 ? 0 : 1 - abs * 0.15;
             const zIndex = 100 - abs;
 
             return (
               <motion.div
                 key={show._id}
-                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pr-20"
+                className="absolute left-1/2 top-1/2 flex items-center justify-center -translate-x-1/2 -translate-y-1/2"
                 style={{ zIndex }}
                 animate={{ x: translateX, scale, opacity }}
                 initial={false}
                 transition={{ type: "spring", stiffness: 300, damping: 35 }}
               >
                 <div
-                  className="w-[260px] sm:w-[220px] cursor-pointer"
+                  className="w-full cursor-pointer"
                   // Only navigate if this is the ACTIVE (center) card
                   onClick={() => {
                     if (idx === activeIndex) {
