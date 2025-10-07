@@ -6,26 +6,48 @@
   --color-primary-dull: #d63854;
 }
 
+/* ========== Default (Dark Mode) ========== */
+:root {
+  --bg-color: #09090b;
+  --text-color: #ffffff;
+  --scrollbar-thumb: #787777;
+  --scrollbar-track: #1e1e1e;
+}
+
+/* ========== Light Mode ========== */
+[data-theme="light"] {
+  --bg-color: #46464b00;
+  --text-color: #ffffff;
+  --scrollbar-thumb: #c1c1c1;
+  --scrollbar-track: #f1f1f1;
+}
+
 * {
   font-family: "Outfit", sans-serif;
   scrollbar-width: thin;
-  scrollbar-color: #787777 #1e1e1e;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
 }
 
 body {
-  color: white;
-  background-color: #09090b;
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  transition: background-color 0.3s, color 0.3s;
 }
 
-.no-scrollbar{
+.no-scrollbar {
   scrollbar-width: none;
 }
 
 input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button{
+input::-webkit-inner-spin-button {
   -webkit-appearance: none;
 }
 
 ::-webkit-calendar-picker-indicator {
   filter: invert(1);
+}
+
+/* Light mode calendar icon fix */
+[data-theme="light"] ::-webkit-calendar-picker-indicator {
+  filter: invert(0);
 }

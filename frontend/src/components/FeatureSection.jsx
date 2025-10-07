@@ -77,7 +77,7 @@ const FeatureSection = () => {
                 style={{ zIndex }}
                 animate={{ x: translateX, scale, opacity }}
                 initial={false}
-                transition={{ type: "spring", stiffness: 300, damping: 35 }}
+                transition={{ type: "spring", stiffness: 400, damping: 40 }}
               >
                 <div
                   className="w-full cursor-pointer"
