@@ -1,6 +1,6 @@
 export const seatLayouts = {
   layout1: {
-    name: "Cinema CCC",
+    name: "VIP Cinema CCC",
     groups: [
       ["A", "B"],
       ["C", "D"],
@@ -19,21 +19,21 @@ export const seatLayouts = {
       ["G", "H"],
       ["I", "J"],
     ],
-    seatsPerRow: 4,
+    seatsPerRow: 6,
   },
   layout3: {
-    name: "VIP Cinema CCC",
+    name: "Cinema D2 CCC",
     groups: [["A"], ["B"], ["C"], ["D"], ["E"], ["F"]],
-    seatsPerRow: 6,
+    seatsPerRow: 8,
   },
   layout4: {
     name: "Liberty Cinema Rajagiriya",
     groups: [["A"], ["B"], ["C"], ["D"], ["E"], ["F"], ["G"]],
-    seatsPerRow: 10,
+    seatsPerRow:12,
   },
     layout5: {
     name: "Liberty Cinema Colombo 3",
     groups: [["A"], ["B"], ["C"], ["D"], ["E"], ["F"], ["G"]],
-    seatsPerRow: 10,
+    seatsPerRow: 12,
   },
 };

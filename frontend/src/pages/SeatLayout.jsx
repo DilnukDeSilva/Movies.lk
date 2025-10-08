@@ -174,35 +174,43 @@ const SeatLayout = () => {
         <h1 className="text-2xl font-semibold mb-5">Select Your Seat</h1>
         <img src={assets.screenImage} alt="screen" />
         <p className="text-gray-400 text-sm mb-0">SCREEN SIDE</p>
+        <p className="text-gray-400 text-xs mb-2 sm:hidden animate-pulse">
+          Swipe or scroll horizontally to view all seats
+        </p>
         {selectedTime ? (
-          <div className="flex flex-col items-center mt-10 text-xs text-gray-300">
-            {/* If layout3, layout4, layout5 → stack rows vertically */}
-            {["layout3", "layout4", "layout5"].includes(seatLayout) ? (
-              <div className="flex flex-col gap-2">
-                {layoutConfig.groups.map((row) =>
-                  renderSeats(row, layoutConfig.seatsPerRow)
-                )}
-              </div>
-            ) : (
-              // Else → keep old left/right grouping
-              <>
-                <div className="grid grid-cols-2 md:grid-cols-1 gap-8 md:gap-0 mb-6">
-                  {layoutConfig.groups[0].map((row) =>
+          <div className="w-full overflow-x-auto">
+            <div
+              className="flex flex-col items-center mt-10 text-xs text-gray-300 min-w-[750px] mb-5"
+              style={{ WebkitOverflowScrolling: "touch" }}
+            >
+              {/* If layout3, layout4, layout5 → stack rows vertically */}
+              {["layout3", "layout4", "layout5"].includes(seatLayout) ? (
+                <div className="flex flex-col gap-2">
+                  {layoutConfig.groups.map((row) =>
                     renderSeats(row, layoutConfig.seatsPerRow)
                   )}
                 </div>
+              ) : (
+                // Else → keep old left/right grouping
+                <>
+                  <div className="grid grid-cols-1 md:gap-0 mb-6">
+                    {layoutConfig.groups[0].map((row) =>
+                      renderSeats(row, layoutConfig.seatsPerRow)
+                    )}
+                  </div>
 
-                <div className="grid grid-cols-2 gap-10">
-                  {layoutConfig.groups.slice(1).map((group, idx) => (
-                    <div key={idx}>
-                      {group.map((row) =>
-                        renderSeats(row, layoutConfig.seatsPerRow)
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </>
-            )}
+                  <div className="grid grid-cols-2 gap-10">
+                    {layoutConfig.groups.slice(1).map((group, idx) => (
+                      <div key={idx}>
+                        {group.map((row) =>
+                          renderSeats(row, layoutConfig.seatsPerRow)
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         ) : (
           <p className="mt-10 text-gray-400">Please select a show</p>
