@@ -17,11 +17,7 @@ const FeatureSection = () => {
 
   if (len === 0) return null;
 
-  const spacing = 180;
   const half = Math.floor(len / 2);
-
-  const next = () => setActiveIndex((i) => (i + 1) % len);
-  const prev = () => setActiveIndex((i) => (i - 1 + len) % len); // 🔥 FIX: prev should decrement
 
   return (
     <div className="px-6 md:px-16 lg:px-24 xl:px-44 overflow-hidden items-center">
@@ -63,8 +59,8 @@ const FeatureSection = () => {
             if (offset < -half) offset += len;
 
             const abs = Math.abs(offset);
-            const spacing = window.innerWidth < 640 ? 140 : window.innerWidth < 1024 ? 200 : 240;
-            //const spacing = 240;
+            //const spacing = window.innerWidth < 640 ? 140 : window.innerWidth < 1024 ? 200 : 240;
+            const spacing = 200;
             const translateX = offset * spacing;
             const scale = Math.max(0.75, 1.1 - 0.15 * abs);
             const opacity = abs > 3 ? 0 : 1 - abs * 0.15;
