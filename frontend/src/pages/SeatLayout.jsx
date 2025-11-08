@@ -142,14 +142,14 @@ const SeatLayout = () => {
               seatLayouts[item.seatLayout]?.name || "Unknown Hall";
             return (
               <div
-                key={item.time}
+                key={item.showId}
                 onClick={() => {
                   setSelectedTime(item);
                   setSelectedSeats([]); // reset when changing halls
                   setOccupiedSeats([]);
                 }}
                 className={`flex flex-col items-start gap-1 px-6 py-2 w-max rounded-r-md cursor-pointer transition ${
-                  selectedTime?.time === item.time
+                  selectedTime?.showId === item.showId
                     ? "bg-primary text-white"
                     : "hover:bg-primary/20"
                 }`}
